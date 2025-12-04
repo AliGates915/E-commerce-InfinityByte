@@ -98,8 +98,8 @@ const handleCheckout = async (paymentMethod = "stripe") => {
           price: item.price,
           quantity: item.quantity,
         })),
-        success_url: "https://www.Infinity Bytes.com/success",
-        cancel_url: "https://www.Infinity Bytes.com/cancel",
+        success_url: "https://e-commerce-infinity-byte.vercel.app/success",
+        cancel_url: "https://e-commerce-infinity-byte.vercel.app/cancel",
         metadata,
         deviceFingerprintId, // ✅ send to backend only for safepay
       }),
@@ -283,7 +283,7 @@ const handleCheckout = async (paymentMethod = "stripe") => {
               </div>
 
               <button
-                onClick={() => handleCheckout("safepay")}
+                onClick={() => handleCheckout("stripe")}
                 className="block mt-6 w-full text-center bg-newPrimary text-white py-2 rounded hover:bg-newPrimaryDark font-semibold disabled:opacity-50"
                 disabled={checkoutLoading}
               >
