@@ -123,11 +123,11 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="bg-white shadow-md sticky top-0 z-50">
+    <nav className="bg-gray-100 shadow-md sticky top-0 z-50">
       <div className="flex items-center justify-between px-5 md:px-20 py-3">
         {/* Logo */}
         <Link to="/" className="flex items-center flex-shrink-0">
-          <img src="/images/logo12.jpg" alt="Infinity Logo" className="h-14 w-auto" />
+          <img src="/images/infinitybyte.png" alt="Infinity Logo" className="h-14 w-auto" />
         </Link>
 
         {/* Desktop Menu */}
