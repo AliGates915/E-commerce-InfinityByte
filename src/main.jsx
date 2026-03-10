@@ -8,6 +8,5 @@ import "./index.css"; // or your main CSS file
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <AppProviders />
-    {/* <Notice/> */}
   </React.StrictMode>
 );

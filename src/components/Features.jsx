@@ -1,36 +1,30 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import { FaArrowRight } from "react-icons/fa";
 import ProductCard from "./ProductCard";
-import axios from "axios";
 import { PuffLoader } from "react-spinners";
+import { useQuery } from "@tanstack/react-query";
+import { fetchPromotionSections } from "../services/promotionApi";
 
 const Features = () => {
-  const [sections, setSections] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const { data: sections = [], isLoading, isError } = useQuery({
+    queryKey: ["promotionSections"],
+    queryFn: fetchPromotionSections,
+    staleTime: 1000 * 60 * 5, // cache 5 minutes
+    refetchOnWindowFocus: false,
+  });
 
-  useEffect(() => {
-    const fetchSections = async () => {
-      setLoading(true);
-      try {
-        const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/promotions/sections`);
-        let fetchedSections = res.data.data || [];
-        // Case-insensitive sort so "features" is always first
-        fetchedSections = fetchedSections.sort((a, b) => {
-          if (a.name?.toLowerCase() === "features") return -1;
-          if (b.name?.toLowerCase() === "features") return 1;
-          return 0;
-        });
-        console.log("Sorted sections:", fetchedSections);
-        setSections(fetchedSections);
-        setTimeout(() => setLoading(false), 1000); // Optional: for loader effect
-      } catch (error) {
-        console.error("Failed to fetch promotion sections:", error);
-        setLoading(false);
-      }
-    };
-    fetchSections();
-  }, []);
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-40">
+        <PuffLoader />
+      </div>
+    );
+  }
+
+  if (isError) {
+    return <p className="text-center text-red-500">Failed to load products</p>;
+  }
 
   return (
     <>
@@ -41,19 +35,14 @@ const Features = () => {
               <h2 className="text-3xl lg:text-4xl font-bold text-newPrimary mb-4">
                 {section.name} Products
               </h2>
-           
             </div>
-            {loading ? (
-              <div className="flex justify-center items-center h-40">
-                <PuffLoader />
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                {section.products.slice(0, 8).map((product) => (
-                  <ProductCard key={product._id} product={product} />
-                ))}
-              </div>
-            )}
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {section.products.slice(0, 8).map((product) => (
+                <ProductCard key={product._id} product={product} />
+              ))}
+            </div>
+
             <div className="text-center mt-12">
               <Link
                 to={`/product-categories/${section.name.toLowerCase()}`}

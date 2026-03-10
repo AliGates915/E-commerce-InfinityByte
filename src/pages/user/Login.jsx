@@ -3,14 +3,15 @@ import gsap from "gsap";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
 import { useDispatch } from "react-redux";
+import { useMutation } from "@tanstack/react-query";
 import { loginSuccess } from "../../context/authSlice";
+import { loginUser } from "../../services/authApi";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -18,49 +19,38 @@ const Login = () => {
     gsap.from(".login-box", { opacity: 0, y: 50, duration: 1 });
   }, []);
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    setIsLoading(true);
-    try {
-      const { data } = await axios.post(
-        `${import.meta.env.VITE_API_BASE_URL}/auth/login`,
-        { email, password }
-      );
-
-      const user = data.user || data;
-        
+  const loginMutation = useMutation({
+    mutationFn: loginUser,
+    onSuccess: (user) => {
       dispatch(loginSuccess(user));
       localStorage.setItem("userInfo", JSON.stringify(user));
+
       toast.success("Logged in successfully 🎉");
 
-      console.log("User info", user);
-      
-      // Role-based redirect
-      if (user.isAdmin === true) {
+      if (user.isAdmin) {
         navigate("/admin");
       } else {
         navigate("/");
       }
-      
-      // Refresh the page after navigation
-      setTimeout(() => {
-        window.location.reload();
-      }, 100);
-      
-    } catch (error) {
+    },
+    onError: (error) => {
       toast.error(
         error.response?.data?.message ||
-        error.message ||
-        "Login failed. Please try again."
+          error.message ||
+          "Login failed. Please try again."
       );
-    } finally {
-      setIsLoading(false);
-    }
+    },
+  });
+
+  const handleLogin = (e) => {
+    e.preventDefault();
+    loginMutation.mutate({ email, password });
   };
 
-  const handleForgotPassword = async () => {
+  const handleForgotPassword = () => {
     navigate("/forgot-password");
   };
+
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
