@@ -39,6 +39,8 @@ import RefundReturn from "./pages/user/RefundReturn";
 import TermsConditions from "./pages/user/TermsConditions";
 import PaymentSuccess from "./pages/user/PaymentSuccess ";
 
+import AIChatbot from "./components/AIChatbot";
+
 
 function AppContent() {
   const location = useLocation();
@@ -108,8 +110,10 @@ function AppContent() {
           </Route>
         </Routes>
       </main>
-      {!isAdminRoute && !isHideFooterRoute && <Footer />}
+      {!isAdminRoute && !isHideFooterRoute &&  <Footer /> && <AIChatbot />}
       <ToastContainer position="top-right" autoClose={2000} />
+
+      
     </div>
   );
 }
