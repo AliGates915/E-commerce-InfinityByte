@@ -98,7 +98,7 @@ const AIChatbot = () => {
                 <Bot size={20} />
               </div>
               <div>
-                <h3 className="font-semibold">AI Assistant</h3>
+                <h3 className="font-semibold">AI Agent</h3>
                 <p className="text-xs text-white/80">Always here to help</p>
               </div>
             </div>
