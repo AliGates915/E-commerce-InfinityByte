@@ -7,6 +7,11 @@ const AIChatbot = () => {
   const [messages, setMessages] = useState([
     { role: "assistant", content: "Hi 👋 How can I help you today?" }
   ]);
+
+  const [sessionId, setSessionId] = useState(
+    localStorage.getItem("ai_session") || null
+  );
+
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [typingMessage, setTypingMessage] = useState("");
@@ -53,11 +58,21 @@ const AIChatbot = () => {
     try {
       const res = await axios.post(
         `${import.meta.env.VITE_API_BASE_URL}/ai/chat`,
-        { message: input }
+        {
+          message: input,
+          sessionId: sessionId,
+        }
       );
 
-      // Use typing effect for response
-      typeMessage(res?.data?.reply || "Sorry, I couldn't process that request.");
+      const reply = res?.data?.reply || "Sorry, I couldn't process that request.";
+
+      // Save sessionId if new
+      if (!sessionId && res.data.sessionId) {
+        setSessionId(res.data.sessionId);
+        localStorage.setItem("ai_session", res.data.sessionId);
+      }
+
+      typeMessage(reply);
     } catch (error) {
       typeMessage("Sorry, I'm having trouble connecting. Please try again.");
     } finally {
@@ -70,6 +85,12 @@ const AIChatbot = () => {
       e.preventDefault();
       sendMessage();
     }
+  };
+
+  const resetChat = () => {
+    localStorage.removeItem("ai_session");
+    setSessionId(null);
+    setMessages([{ role: "assistant", content: "Hi 👋 How can I help you today?" }]);
   };
 
   return (
@@ -90,7 +111,7 @@ const AIChatbot = () => {
       {/* Chat Window */}
       {open && (
         <div className="fixed bottom-24 right-6 w-96 h-[600px] bg-white rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-gray-200 animate-slide-up">
-          
+
           {/* Header */}
           <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-4 text-white flex items-center justify-between">
             <div className="flex items-center gap-3">
@@ -102,7 +123,13 @@ const AIChatbot = () => {
                 <p className="text-xs text-white/80">Always here to help</p>
               </div>
             </div>
-            <button 
+            <button
+              onClick={resetChat}
+              className="text-xs bg-white/20 px-2 py-1 rounded"
+            >
+              New Chat
+            </button>
+            <button
               onClick={() => setOpen(false)}
               className="hover:bg-white/20 p-1 rounded-lg transition"
             >
@@ -119,21 +146,19 @@ const AIChatbot = () => {
               >
                 <div className={`flex items-start gap-2 max-w-[80%] ${message.role === "user" ? "flex-row-reverse" : ""}`}>
                   {/* Avatar */}
-                  <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center ${
-                    message.role === "user" 
-                      ? "bg-blue-100 text-blue-600" 
+                  <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center ${message.role === "user"
+                      ? "bg-blue-100 text-blue-600"
                       : "bg-purple-100 text-purple-600"
-                  }`}>
+                    }`}>
                     {message.role === "user" ? <User size={16} /> : <Bot size={16} />}
                   </div>
-                  
+
                   {/* Message Bubble */}
                   <div
-                    className={`p-3 rounded-2xl ${
-                      message.role === "user"
+                    className={`p-3 rounded-2xl ${message.role === "user"
                         ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-tr-none"
                         : "bg-white text-gray-800 rounded-tl-none shadow-sm"
-                    }`}
+                      }`}
                   >
                     <p className="text-sm whitespace-pre-wrap break-words">
                       {message.content}
@@ -145,7 +170,7 @@ const AIChatbot = () => {
                 </div>
               </div>
             ))}
-            
+
             {/* Typing Indicator */}
             {typingMessage && (
               <div className="flex justify-start">
@@ -162,7 +187,7 @@ const AIChatbot = () => {
                 </div>
               </div>
             )}
-            
+
             <div ref={messagesEndRef} />
           </div>
 
@@ -186,20 +211,19 @@ const AIChatbot = () => {
                   </div>
                 )}
               </div>
-              
+
               <button
                 onClick={sendMessage}
                 disabled={!input.trim() || isLoading}
-                className={`p-3 rounded-xl transition-all ${
-                  !input.trim() || isLoading
+                className={`p-3 rounded-xl transition-all ${!input.trim() || isLoading
                     ? "bg-gray-100 text-gray-400 cursor-not-allowed"
                     : "bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:scale-105 shadow-md"
-                }`}
+                  }`}
               >
                 <Send size={18} />
               </button>
             </div>
-            
+
             {/* Hint Text */}
             <p className="text-xs text-gray-400 mt-2 text-center">
               Press Enter to send • Shift + Enter for new line
