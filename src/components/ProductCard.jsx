@@ -26,10 +26,10 @@ const ProductCard = ({ product }) => {
     );
   }, []);
 
-  const categoryString =
-    product.category && product.category.length > 0
-      ? product.category.map((cat) => cat.name).join(", ")
-      : "N/A";
+  // const categoryString =
+  //   product.category && product.category.length > 0
+  //     ? product.category.map((cat) => cat.name).join(", ")
+  //     : "N/A";
 
   const discount =
     typeof product.discountPercentage === "number" && product.discountPercentage > 0
@@ -64,7 +64,7 @@ const ProductCard = ({ product }) => {
         </div>
         <h3 className="mt-2 text-lg font-semibold">{product.name}</h3>
         <p className="text-newPrimary font-bold">${product.price}</p>
-        <p className="text-gray-500">{categoryString}</p>
+        {/* <p className="text-gray-500">{categoryString}</p> */}
       </Link>
     </div>
   );
