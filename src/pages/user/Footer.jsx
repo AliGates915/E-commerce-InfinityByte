@@ -45,7 +45,7 @@ const Footer = () => {
           className="flex items-center gap-3 font-bold text-3xl text-black hover:text-newPrimary transition-colors duration-300"
         >
           <Store className="w-10 h-10 text-black hover:text-newPrimary transition-colors duration-300" />
-          <span>Infinity Bytes PVT.Ltd</span>
+          <span>Infinity Bytes </span>
         </Link>
         <p className="text-black text-base leading-relaxed">
           Your premier destination for quality products and an exceptional shopping experience.
@@ -166,7 +166,7 @@ const Footer = () => {
 
         <div className="border-t border-black/50 mt-12 pt-6 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-black text-sm">
-            © 2025 Infinity Bytes PVT.Ltd. All rights reserved.
+            © 2025 Infinity Bytes All rights reserved.
           </p>
           <p className="text-black text-sm flex items-center gap-2">
             Made with{' '}

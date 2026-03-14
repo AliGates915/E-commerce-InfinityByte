@@ -138,7 +138,7 @@ const Carousel = () => {
             ref={textRef}
             className="text-4xl md:text-5xl font-bold mb-4 text-center animate-pulse text-shadow-xl"
           >
-            Welcome to Infinity Bytes PVT.Ltd
+            Welcome to Infinity Bytes
           </h1>
           <p className="text-lg md:text-xl mb-8 text-center max-w-2xl">
             Discover the best products with unbeatable deals!

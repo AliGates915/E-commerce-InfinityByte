@@ -36,7 +36,7 @@ const TermsConditions = () => {
             Terms and Conditions
           </h1>
           <p className="text-gray-800 mb-4 leading-relaxed">
-            Welcome to <span className="font-semibold text-newPrimary">Infinity Bytes Pvt Ltd</span> Mall of Lahore, Cantt, Lahore. Contact #: 0310xxxxx. By using our website, you agree to these terms.
+            Welcome to <span className="font-semibold text-newPrimary">Infinity Bytes</span> Mall of Lahore, Cantt, Lahore. Contact #: 0310xxxxx. By using our website, you agree to these terms.
           </p>
 
           <h2 className="text-xl font-semibold text-gray-900 mb-2">1. General Terms</h2>
